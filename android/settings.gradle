@@ -1,0 +1,36 @@
+pluginManagement {
+    // اقرأ مسار Flutter SDK من local.properties
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def path = properties.getProperty("flutter.sdk")
+        assert path != null : "flutter.sdk not set in local.properties"
+        return path
+    }
+    // يوفّر dev.flutter.flutter-gradle-plugin
+    includeBuild("${flutterSdkPath()}/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    // لا تغيّر النسخة
+    plugins {
+        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+    }
+}
+
+// تعريف نسخ البلجنات (AGP/Kotlin/Google Services)
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "8.7.2" apply false
+    id "com.android.library"     version "8.7.2" apply false
+    // ✅ رفعت نسخة Kotlin
+    id "org.jetbrains.kotlin.android" version "2.1.0" apply false
+    id "com.google.gms.google-services" version "4.4.2" apply false
+}
+
+// لا تضع أي أوامر قبل pluginManagement/plugins أعلاه
+include(":app")
